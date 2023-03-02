@@ -144,11 +144,11 @@ public class RNA_Scope_Nerve implements PlugIn {
                     Objects3DIntPopulation gene1Pop = genes.findGenesPop(imgGene1, roi);
                     System.out.println("gene1 found = "+gene1Pop.getNbObjects());
                     double gene1Vol = genes.findPopVolume(gene1Pop);
-                    int estimatedGene1Nb = (int) Math.round(gene1Vol/genes.singleDotVol);
+                    double estimatedGene1Nb = (int) Math.round(gene1Vol/genes.singleDotVol);
                     
                     // Open gene2
                     ImagePlus imgGene2 = null;
-                    int estimatedGene2Nb = 0;
+                    double estimatedGene2Nb = 0;
                     double gene2Vol = 0;
                     Objects3DIntPopulation gene2Pop = null;
                     if (!channels[1].equals("None")) {
@@ -165,8 +165,9 @@ public class RNA_Scope_Nerve implements PlugIn {
                     
                     // Write parameters
                     IJ.showStatus("Writing parameters ...");
-                    double ratioNb = (gene2Vol == 0) ?  0 : estimatedGene1Nb/estimatedGene2Nb;
+                    double ratioNb = (estimatedGene2Nb == 0) ?  0 : estimatedGene1Nb/estimatedGene2Nb;
                     double ratioVol = (gene2Vol == 0) ? 0 : gene1Vol/gene2Vol;
+                   
                     outPutResults.write(rootName+"\t"+roiName+"\t"+roiVol+"\t"+gene1Vol+"\t"+(gene1Vol/roiVol)*100+"\t"+estimatedGene1Nb+
                             "\t"+gene2Vol+"\t"+(gene2Vol/roiVol)*100+"\t"+estimatedGene2Nb+"\t"+ratioNb*100+"\t"+ratioVol*100+"\n");
                     outPutResults.flush();
@@ -178,6 +179,7 @@ public class RNA_Scope_Nerve implements PlugIn {
                     imgGene1.close();
                 }
             }
+            outPutResults.close();
             IJ.showStatus("Process done");
         } catch (DependencyException | ServiceException | FormatException | IOException ex) {
             Logger.getLogger(RNA_Scope_Nerve.class.getName()).log(Level.SEVERE, null, ex);
