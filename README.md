@@ -19,8 +19,8 @@ A *.roi* or *.zip* file containing ROI(s) can be provided with each image.
 ### Plugin description
 
 In each ROI,
-* Detect Gene1 dots with Median filtering + DoG filtering + *MaxEntropy* thresholding
-* Detect Gene2 dots with Median filtering + DoG filtering + *MaxEntropy* thresholding
+* Detect Gene1 dots with Median filtering + DoG filtering + MaxEntropy thresholding
+* Detect Gene2 dots with Median filtering + DoG filtering + MaxEntropy thresholding
 * Estimate number of genes with foci Single foci estimated volume
 
 ### Dependencies
