@@ -362,21 +362,27 @@ public class RNA_Scope_Nerve_Processing {
     public void saveGenesImage (ImagePlus img, Objects3DIntPopulation gene1Pop, Objects3DIntPopulation gene2Pop, String path) {
         // red gene1 , green gene2
         ImageHandler imhGene1 = ImageHandler.wrap(img).createSameDimensions();
-        ImageHandler imhGene2 = (gene2Pop.getNbObjects() > 0) ? imhGene1.duplicate() : null;
+        ImageHandler imhGene2 = (gene2Pop.getNbObjects() == 0) ? null : imhGene1.duplicate();
         // draw genes population
         for (Object3DInt ob : gene1Pop.getObjects3DInt())
             ob.drawObject(imhGene1, 255);
-        if (imhGene2 != null)
+        if (imhGene2 != null) {
             for (Object3DInt ob : gene2Pop.getObjects3DInt())
                 ob.drawObject(imhGene2, 255);
-        ImagePlus[] imgColors = {imhGene1.getImagePlus(), imhGene2.getImagePlus()};
-        ImagePlus imgObjects = new RGBStackMerge().mergeHyperstacks(imgColors, false);
-        imgObjects.setCalibration(cal);
-        IJ.run(imgObjects, "Enhance Contrast", "saturated=0.35");
-
-        // Save images
-        FileSaver ImgObjectsFile = new FileSaver(imgObjects);
-        ImgObjectsFile.saveAsTiff(path);
+            ImagePlus[] imgColors = {imhGene1.getImagePlus(), imhGene2.getImagePlus()};
+            ImagePlus imgObjects = new RGBStackMerge().mergeHyperstacks(imgColors, true);
+            imgObjects.setCalibration(cal);
+            IJ.run(imgObjects, "Enhance Contrast", "saturated=0.35");
+            // Save images
+            FileSaver ImgObjectsFile = new FileSaver(imgObjects);
+            ImgObjectsFile.saveAsTiff(path);
+        }
+        else {
+            ImagePlus imgSave = imhGene1.getImagePlus();
+            // Save images
+            FileSaver ImgObjectsFile = new FileSaver(imgSave);
+            ImgObjectsFile.saveAsTiff(path);
+        }
         imhGene1.closeImagePlus();
         if (imhGene2 != null)
             imhGene2.closeImagePlus();

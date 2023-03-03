@@ -9,7 +9,6 @@
 import Genes_Tools.RNA_Scope_Nerve_Processing;
 import ij.*;
 import ij.gui.Roi;
-import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 import ij.plugin.frame.RoiManager;
 import java.awt.Rectangle;
@@ -78,9 +77,9 @@ public class RNA_Scope_Nerve implements PlugIn {
             
             // Find chanels, image calibration
             reader.setId(imageFiles.get(0));
-            String[] chsNames = genes.findChannels(imageFiles.get(0), meta, reader);
+            String[] channels = genes.findChannels(imageFiles.get(0), meta, reader);
             genes.cal = genes.findImageCalib(meta);
-            String[] channels = genes.dialog(chsNames);
+            String[] chs = genes.dialog(channels);
             if(channels == null)
                 return;
             
@@ -136,8 +135,8 @@ public class RNA_Scope_Nerve implements PlugIn {
                     options.setCropRegion(0, regRoi);
                     
                     // Open gene1
-                    int indexCh = ArrayUtils.indexOf(chsNames, channels[0]);
-                    System.out.println("Opening gene1 channel = "+ channels[indexCh]);
+                    int indexCh = ArrayUtils.indexOf(channels, chs[0]);
+                    System.out.println("Opening gene1 channel = "+ chs[0]);
                     ImagePlus imgGene1 = BF.openImagePlus(options)[indexCh];
                     double roiVol = genes.roiVolume(roi, imgGene1);
                     System.out.println("Roi "+roiName+ " vol = "+roiVol);
@@ -150,10 +149,10 @@ public class RNA_Scope_Nerve implements PlugIn {
                     ImagePlus imgGene2 = null;
                     double estimatedGene2Nb = 0;
                     double gene2Vol = 0;
-                    Objects3DIntPopulation gene2Pop = null;
-                    if (!channels[1].equals("None")) {
-                        indexCh = ArrayUtils.indexOf(chsNames, channels[1]);
-                        System.out.println("Opening gene2 channel = "+ channels[indexCh]);
+                    Objects3DIntPopulation gene2Pop = new Objects3DIntPopulation();
+                    if (!chs[1].equals("None")) {
+                        indexCh = ArrayUtils.indexOf(channels, chs[1]);
+                        System.out.println("Opening gene2 channel = "+ chs[1]);
                         imgGene2 = BF.openImagePlus(options)[indexCh];
                         // find gene2 dots
                         gene2Pop = genes.findGenesPop(imgGene2, roi);
